@@ -1,35 +1,38 @@
-import { eachDayOfInterval, format } from 'date-fns';
+import { eachDayOfInterval, format, addDays } from 'date-fns';
 
-export const CALENDAR_DAY_MAPPING: {
-  [key in
-    | '2024-12-23'
-    | '2024-12-24'
-    | '2024-12-25'
-    | '2024-12-26'
-    | '2024-12-27'
-    | '2024-12-28'
-    | '2024-12-29']: string;
-} = {
-  '2024-12-23': 'monday',
-  '2024-12-24': 'tuesday',
-  '2024-12-25': 'wednesday',
-  '2024-12-26': 'thursday',
-  '2024-12-27': 'friday',
-  '2024-12-28': 'saturday',
-  '2024-12-29': 'sunday',
+export const START_DATE = new Date();
+
+const getWeekDays = (startDate: Date) => {
+  const days: { [key: string]: string } = {};
+  const allowedDates: Date[] = [];
+
+  for (let i = 0; i < 14; i++) {
+    const currentDate = addDays(startDate, i);
+    const dayString = format(currentDate, 'yyyy-MM-dd');
+    const dayName = format(currentDate, 'eeee').toLowerCase();
+
+    if(dayName === 'saturday' || dayName === 'sunday') {
+
+    // do nothing
+
+    } else {
+      days[dayString] = dayName;
+      allowedDates.push(currentDate);
+    }
+    
+    console.log(dayString, dayName);
+
+    
+  }
+
+  return { days, allowedDates };
 };
 
-export const ALLOWED_DATES = [
-  new Date('2024-12-23'),
-  new Date('2024-12-24'),
-  new Date('2024-12-25'),
-  new Date('2024-12-26'),
-  new Date('2024-12-27'),
-  new Date('2024-12-28'),
-  new Date('2024-12-29')
-];
 
-export const START_DATE = new Date('2024-12-23');
+const { days, allowedDates } = getWeekDays(START_DATE);
+
+export const CALENDAR_DAY_MAPPING = days;
+export const ALLOWED_DATES = allowedDates;
 
 // Checks if a given date is allowed based on the provided allowed dates.
 export const isDateAllowed = (date: Date, allowedDates: Date[]): boolean => {
@@ -52,7 +55,7 @@ export const generateDateRange = (
 
 // Gets the week dates starting from the provided start date.
 export function getWeekDates(startDate: Date): string[] {
-  return Array.from({ length: 5 }, (_, i) => {
+  return Array.from({ length: 14 }, (_, i) => {
     const date = new Date(startDate);
     date.setDate(startDate.getDate() + i);
     return date.toISOString().slice(0, 10);
