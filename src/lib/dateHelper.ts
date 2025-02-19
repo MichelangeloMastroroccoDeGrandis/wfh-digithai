@@ -2,24 +2,6 @@ import { eachDayOfInterval, format, addDays, startOfISOWeek } from 'date-fns';
 
 export const START_DATE = new Date();
 
-const getWeekDays = (startDate: Date) => {
-  const days: { [key: string]: string } = {};
-  const allowedDates: Date[] = [];
-
-  for (let i = 0; i < 14; i++) {
-    const currentDate = addDays(startDate, i);
-    const dayString = format(currentDate, 'yyyy-MM-dd');
-    const dayName = format(currentDate, 'eeee').toLowerCase();
-
-    if (dayName !== 'saturday' && dayName !== 'sunday') {
-      days[dayString] = dayName;
-      allowedDates.push(currentDate);
-    }
-  }
-
-  return { days, allowedDates };
-};
-
 // ✅ New function: Get weekdays for current and next week only
 const getCurrentAndNextWeekDays = (startDate: Date) => {
   const days: { [key: string]: string } = {};
