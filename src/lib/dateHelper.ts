@@ -1,4 +1,4 @@
-import { eachDayOfInterval, format, addDays } from 'date-fns';
+import { eachDayOfInterval, format, addDays, startOfISOWeek } from 'date-fns';
 
 export const START_DATE = new Date();
 
@@ -11,37 +11,49 @@ const getWeekDays = (startDate: Date) => {
     const dayString = format(currentDate, 'yyyy-MM-dd');
     const dayName = format(currentDate, 'eeee').toLowerCase();
 
-    if(dayName === 'saturday' || dayName === 'sunday') {
-
-    // do nothing
-
-    } else {
+    if (dayName !== 'saturday' && dayName !== 'sunday') {
       days[dayString] = dayName;
       allowedDates.push(currentDate);
     }
-    
-    console.log(dayString, dayName);
-
-    
   }
 
   return { days, allowedDates };
 };
 
+// ✅ New function: Get weekdays for current and next week only
+const getCurrentAndNextWeekDays = (startDate: Date) => {
+  const days: { [key: string]: string } = {};
+  const allowedDates: Date[] = [];
 
-const { days, allowedDates } = getWeekDays(START_DATE);
+  const startOfWeek = startOfISOWeek(startDate); // Monday of current week
+  const nextWeekEnd = addDays(startOfWeek, 13);  // Sunday of next week
+
+  eachDayOfInterval({ start: startOfWeek, end: nextWeekEnd }).forEach((currentDate) => {
+    const dayName = format(currentDate, 'eeee').toLowerCase();
+    if (dayName !== 'saturday' && dayName !== 'sunday') {
+      const dayString = format(currentDate, 'yyyy-MM-dd');
+      days[dayString] = dayName;
+      allowedDates.push(currentDate);
+    }
+  });
+
+  return { days, allowedDates };
+};
+
+// ✅ Use the new function for calendar mapping and allowed dates
+const { days, allowedDates } = getCurrentAndNextWeekDays(START_DATE);
 
 export const CALENDAR_DAY_MAPPING = days;
 export const ALLOWED_DATES = allowedDates;
 
-// Checks if a given date is allowed based on the provided allowed dates.
+// ✅ Checks if a given date is allowed based on the provided allowed dates.
 export const isDateAllowed = (date: Date, allowedDates: Date[]): boolean => {
   return allowedDates.some(
     (allowedDate) => allowedDate.toDateString() === date.toDateString()
   );
 };
 
-// Generates an array of allowed date strings between start and end dates.
+// ✅ Generates an array of allowed date strings between start and end dates.
 export const generateDateRange = (
   start: Date,
   end: Date,
@@ -53,11 +65,10 @@ export const generateDateRange = (
     .map((date) => format(date, 'yyyy-MM-dd'));
 };
 
-// Gets the week dates starting from the provided start date.
+// ✅ Gets the next 14 days from the provided start date.
 export function getWeekDates(startDate: Date): string[] {
   return Array.from({ length: 14 }, (_, i) => {
-    const date = new Date(startDate);
-    date.setDate(startDate.getDate() + i);
-    return date.toISOString().slice(0, 10);
+    const date = addDays(startDate, i);
+    return format(date, 'yyyy-MM-dd');
   });
 }

@@ -1,17 +1,23 @@
 import { StatusLabel } from './StatusLabel';
+import { NEXT_DAYS } from './TableHeader';
 
 type StatusCellProps = {
   status: string;
+  dayName: string; 
   isClickable: boolean;
   onClick: (action: 'add' | 'delete') => void;
 };
 
-export function StatusCell({ status, isClickable, onClick }: StatusCellProps) {
+export function StatusCell({ status, isClickable, dayName, onClick }: StatusCellProps) {
+  // ⛔ Disable clicks if it's Saturday or Sunday
+  const isWeek = dayName === 'monday' || dayName === 'tuesday' || dayName === 'wednesday' || dayName === 'thursday' || dayName === 'friday';
+  const clickable = isClickable && isWeek;
+
   const cellClasses = [
     'border',
     'p-2',
     'text-center',
-    isClickable ? 'cursor-pointer hover:bg-green-200' : 'cursor-not-allowed',
+    clickable ? 'cursor-pointer hover:bg-green-200' : 'cursor-not-allowed',
     status === 'WFH Requested'
       ? 'text-green-600'
       : status === ''
@@ -20,15 +26,14 @@ export function StatusCell({ status, isClickable, onClick }: StatusCellProps) {
   ].join(' ');
 
   const handleClick = () => {
-    if (isClickable) {
-      // Call appropriate handler based on status
+    if (clickable) {
       onClick(status === 'WFH Requested' ? 'delete' : 'add');
     }
   };
 
   return (
     <td className={cellClasses} onClick={handleClick}>
-      <StatusLabel status={status} isClickable={isClickable} />
+      <StatusLabel status={status} isClickable={clickable} />
     </td>
   );
 }

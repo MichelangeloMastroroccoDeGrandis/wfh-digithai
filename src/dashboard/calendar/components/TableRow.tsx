@@ -1,6 +1,7 @@
 import { StatusCell } from './StatusCell';
 import { CalendarDataType } from '../../../lib/types';
 import { CALENDAR_DAY_MAPPING } from '../../../lib/dateHelper';
+import { NEXT_DAYS } from './TableHeader';
 
 type TableRowProps = {
   entry: CalendarDataType;
@@ -9,13 +10,14 @@ type TableRowProps = {
   onClick: (day: string, action: 'add' | 'delete') => void;
 };
 
+
 export function TableRow({
   entry,
   userEmail,
-  weekDates,
   onClick,
 }: TableRowProps) {
   const isUser = userEmail === entry.email;
+
 
   return (
     <tr className='odd:bg-white even:bg-gray-50}' role='row'>
@@ -29,16 +31,19 @@ export function TableRow({
         </div>
       </td>
 
-      {weekDates.map((date, index) => {
+      {Object.keys(NEXT_DAYS).map((date, index) => {
         const dayName =
           CALENDAR_DAY_MAPPING[date as keyof typeof CALENDAR_DAY_MAPPING];
         const status = entry[dayName as keyof CalendarDataType];
         const isClickable = isUser;
 
+        
+
         return (
           <StatusCell
             key={index}
             status={status}
+            dayName={dayName}
             isClickable={isClickable}
             onClick={(action) => onClick(date, action)}
           />
