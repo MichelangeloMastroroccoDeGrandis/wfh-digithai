@@ -1,5 +1,4 @@
 import { StatusLabel } from './StatusLabel';
-import { NEXT_DAYS } from './TableHeader';
 
 type StatusCellProps = {
   status: string;

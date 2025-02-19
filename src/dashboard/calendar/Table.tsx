@@ -79,7 +79,7 @@ export function CalendarTable() {
         </h4>
         <table className='w-full min-w-[800px] table-fixed border-collapse'>
           <thead>
-            <TableHeader weekDates={weekDates} />
+            <TableHeader />
           </thead>
           <tbody>
             {calendarData?.map((entry, index) => (

@@ -1,7 +1,7 @@
 import { StatusCell } from './StatusCell';
 import { CalendarDataType } from '../../../lib/types';
 import { CALENDAR_DAY_MAPPING } from '../../../lib/dateHelper';
-import { NEXT_DAYS } from './TableHeader';
+import { weekDates } from './TableHeader';
 
 type TableRowProps = {
   entry: CalendarDataType;
@@ -31,7 +31,7 @@ export function TableRow({
         </div>
       </td>
 
-      {Object.keys(NEXT_DAYS).map((date, index) => {
+      {Object.keys(weekDates).map((date, index) => {
         const dayName =
           CALENDAR_DAY_MAPPING[date as keyof typeof CALENDAR_DAY_MAPPING];
         const status = entry[dayName as keyof CalendarDataType];

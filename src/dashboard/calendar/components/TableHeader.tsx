@@ -22,12 +22,12 @@ const generateNextWeekDays = () => {
   return days;
 };
 
-export const NEXT_DAYS = generateNextWeekDays();
+export const weekDates = generateNextWeekDays();
 
 export const TableHeader = () => (
   <tr className="bg-gray-200 text-left">
     <th className="border p-2 w-1/8">User</th>
-    {Object.entries(NEXT_DAYS).map(([date, day]) => (
+    {Object.entries(weekDates).map(([date, day]) => (
       <th key={date} className="border p-2">
         {day} <br />
         <span className="text-xs text-gray-500">{date}</span>
